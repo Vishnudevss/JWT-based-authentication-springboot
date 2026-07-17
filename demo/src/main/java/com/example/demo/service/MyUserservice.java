@@ -18,13 +18,9 @@ public class MyUserservice implements UserDetailsService {
     private final UserRepository repo;
 
 
-
-
     public MyUserservice(UserRepository repo) {
         this.repo = repo;
     }
-
-
 
     public User register(User user){
        return repo.save(user);

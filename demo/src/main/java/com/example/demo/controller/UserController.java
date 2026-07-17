@@ -4,6 +4,7 @@ package com.example.demo.controller;
 import com.example.demo.model.User;
 import com.example.demo.service.Authservice;
 import com.example.demo.service.MyUserservice;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -29,7 +30,8 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public String verifyuser(@RequestBody User user){
-        return authservice.verify(user);
+    public ResponseEntity<?> verifyuser(@RequestBody User user) {
+        String token=authservice.verify(user);
+        return ResponseEntity.ok(token);
     }
 }
