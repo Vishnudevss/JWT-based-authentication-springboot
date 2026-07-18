@@ -8,6 +8,7 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
 import javax.crypto.SecretKey;
+import java.nio.charset.StandardCharsets;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -19,8 +20,6 @@ public class JwtService {
     // Secret key (minimum 32 characters for HS256)
     private static final String SECRET =
             "mysecretkeymysecretkeymysecretkey12345";
-
-
 
     public String generateToken(String username) {
 
@@ -38,8 +37,7 @@ public class JwtService {
     }
 
     private SecretKey getKey() {
-        byte[] keyBytes = Decoders.BASE64.decode(SECRET);
-        return Keys.hmacShaKeyFor(keyBytes);
+        return Keys.hmacShaKeyFor(SECRET.getBytes(StandardCharsets.UTF_8));
     }
 
     public String extractUserName(String token) {
