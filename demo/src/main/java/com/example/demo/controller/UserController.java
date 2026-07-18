@@ -4,13 +4,15 @@ package com.example.demo.controller;
 import com.example.demo.model.User;
 import com.example.demo.service.Authservice;
 import com.example.demo.service.MyUserservice;
+import jakarta.servlet.http.HttpServlet;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
+@RequestMapping("/api/v1")
 public class UserController {
 
     public UserController(MyUserservice service, Authservice authservice) {
@@ -33,5 +35,19 @@ public class UserController {
     public ResponseEntity<?> verifyuser(@RequestBody User user) {
         String token=authservice.verify(user);
         return ResponseEntity.ok(token);
+    }
+
+    @PostMapping("/jwt/verify")
+    public ResponseEntity<?> verifyTokenAndGenerateSession(HttpServletRequest request,
+                                                           HttpServletResponse response){
+        String authHeader=request.getHeader("Authorization");
+
+        if(authHeader==null || !authHeader.startsWith("Bearer")){
+            return  ResponseEntity.badRequest().body("Token missing");
+        }
+
+        String token=authHeader.substring(7);
+
+        return authservice.verifyTokenAndSession(token,request,response);
     }
 }
