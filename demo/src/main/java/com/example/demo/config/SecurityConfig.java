@@ -20,20 +20,20 @@ import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.context.SecurityContextHolderFilter;
 
 @Configuration
 @EnableWebSecurity
 public class SecurityConfig {
 
-    @Autowired
-    private UserDetailsService userDetailsService;
+    private final  UserDetailsService userDetailsService;
+    private  final AuthStatusFilter authStatusFilter;
 
-
-    public SecurityConfig(Jwtfilter jwtfilter) {
-        this.jwtfilter = jwtfilter;
+    public SecurityConfig(UserDetailsService userDetailsService, AuthStatusFilter authStatusFilter) {
+        this.userDetailsService = userDetailsService;
+        this.authStatusFilter = authStatusFilter;
     }
 
-    private final Jwtfilter jwtfilter;
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -58,8 +58,8 @@ public class SecurityConfig {
                             response.setStatus(HttpServletResponse.SC_OK);
                             response.getWriter().write("Logged out successfully");
                         }))
-
-                .addFilterBefore(jwtfilter, UsernamePasswordAuthenticationFilter.class)
+                .addFilterAfter(authStatusFilter,
+                                SecurityContextHolderFilter.class)
                 .build();
     }
 

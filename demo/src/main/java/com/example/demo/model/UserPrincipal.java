@@ -12,11 +12,21 @@ import java.util.List;
 
 public class UserPrincipal implements UserDetails {
 
+    private final User user;
+    private AuthStatus authStatus;
+
+    public UserPrincipal(User user, AuthStatus authStatus) {
+        this.user = user;
+        this.authStatus = authStatus;
+    }
+
     public UserPrincipal(User user) {
         this.user = user;
     }
 
-    private final User user;
+    public User getUser() {
+        return user;
+    }
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -51,5 +61,13 @@ public class UserPrincipal implements UserDetails {
     @Override
     public boolean isEnabled() {
         return true;
+    }
+
+    public AuthStatus getAuthStatus(){
+        return authStatus;
+    }
+
+    public void setAuthStatus(AuthStatus authStatus){
+        this.authStatus=authStatus;
     }
 }

@@ -2,12 +2,14 @@ package com.example.demo.controller;
 
 
 import com.example.demo.model.User;
+import com.example.demo.model.UserPrincipal;
 import com.example.demo.service.Authservice;
 import com.example.demo.service.MyUserservice;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,22 +34,35 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> verifyuser(@RequestBody User user) {
-        String token=authservice.verify(user);
+    public ResponseEntity<?> verifyuser(@RequestBody User user,
+                                        HttpServletRequest request,
+                                        HttpServletResponse response) {
+        String token=authservice.verify(user,
+                                       request,
+                                       response);
         return ResponseEntity.ok(token);
     }
 
+
+
     @PostMapping("/jwt/verify")
     public ResponseEntity<?> verifyTokenAndGenerateSession(HttpServletRequest request,
-                                                           HttpServletResponse response){
+                                                           HttpServletResponse response,
+                                                           @AuthenticationPrincipal UserPrincipal currentUser){
+
         String authHeader=request.getHeader("Authorization");
-
-        if(authHeader==null || !authHeader.startsWith("Bearer")){
-            return  ResponseEntity.badRequest().body("Token missing");
+        if(authHeader==null ||!authHeader.startsWith("Bearer ")){
+            return  ResponseEntity.badRequest().body("bad request");
         }
-
         String token=authHeader.substring(7);
-
-        return authservice.verifyTokenAndSession(token,request,response);
+        return authservice.verifyTokenAndSession(token,
+                                               request,
+                                               response,
+                                            currentUser);
     }
 }
+
+
+
+
+
