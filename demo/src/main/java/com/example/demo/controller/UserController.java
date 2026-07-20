@@ -1,6 +1,7 @@
 package com.example.demo.controller;
 
 
+import com.example.demo.Dto.userDto;
 import com.example.demo.model.User;
 import com.example.demo.model.UserPrincipal;
 import com.example.demo.service.Authservice;
@@ -34,7 +35,7 @@ public class UserController {
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> verifyuser(@RequestBody User user,
+    public ResponseEntity<?> verifyuser(@RequestBody userDto user,
                                         HttpServletRequest request,
                                         HttpServletResponse response) {
         String token=authservice.verify(user,

@@ -1,5 +1,6 @@
 package com.example.demo.service;
 
+import com.example.demo.Dto.userDto;
 import com.example.demo.model.AuthStatus;
 import com.example.demo.model.User;
 import com.example.demo.model.UserPrincipal;
@@ -43,7 +44,7 @@ public class Authservice {
             SecurityContextHolder.getContextHolderStrategy();
 
 
-    public String verify(User user,
+    public String verify(userDto user,
                          HttpServletRequest request,
                          HttpServletResponse response) {
 
