@@ -130,7 +130,7 @@ public class Authservice {
                     request,
                     response
             );
-
+            System.out.println("created session");
             return  ResponseEntity.ok("session upgraded successfully");
 
         } catch (Exception e) {
